@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Questionnaire</title>
+</head>
+<body>
+    <h1>Daily Questionnaire</h1>
+    <p>Please complete this questionnaire right before going to bed. Remember not to consume any short-form videos (SFV) after submitting this form.</p>
+
+    <form action="/submit" method="post" onsubmit="saveToFile(); return false;">
+        <fieldset>
+            <legend>Participant Information</legend>
+
+            <label for="participation_code">Enter your Participation Code:</label><br>
+            <input type="text" id="participation_code" name="participation_code" required><br><br>
+
+            <label for="date">Enter today's date:</label><br>
+            <input type="date" id="date" name="date" required><br><br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Your Daily Experience</legend>
+
+            <label for="attention">Rate your attention span today (1 - Very Low, 10 - Very High):</label><br>
+            <input type="number" id="attention" name="attention" min="1" max="10" required><br><br>
+
+            <label for="mood">Rate your mood today (1 - Very Poor, 10 - Excellent):</label><br>
+            <input type="number" id="mood" name="mood" min="1" max="10" required><br><br>
+
+            <label for="sfv_consumption">How many minutes did you spend watching SFVs today?</label><br>
+            <input type="number" id="sfv_consumption" name="sfv_consumption" required><br><br>
+
+            <label for="notes">Additional notes about your day (optional):</label><br>
+            <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br><br>
+
+            <input type="checkbox" id="confirmation" name="confirmation" required>
+            <label for="confirmation">I confirm that I will not consume any SFVs after submitting this questionnaire today.</label><br><br>
+
+            <button type="submit">Submit</button>
+        </fieldset>
+    </form>
+
+    <script>
+        function saveToFile() {
+            const participationCode = document.getElementById('participation_code').value;
+            const date = document.getElementById('date').value;
+            const attention = document.getElementById('attention').value;
+            const mood = document.getElementById('mood').value;
+            const sfvConsumption = document.getElementById('sfv_consumption').value;
+            const notes = document.getElementById('notes').value;
+
+            const data = {
+                participationCode: participationCode,
+                date: date,
+                attention: attention,
+                mood: mood,
+                sfvConsumption: sfvConsumption,
+                notes: notes
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const filename = `${participationCode}_${date}.json`;
+            const link = document.createElement('a');
+
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+
+            alert('Your answers have been saved successfully!');
+        }
+    </script>
+</body>
+</html>
